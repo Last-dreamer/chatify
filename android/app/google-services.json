@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1089312348160",
+    "project_id": "chatify-dreamer",
+    "storage_bucket": "chatify-dreamer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089312348160:android:cabc57bce69e01be15a0e5",
+        "android_client_info": {
+          "package_name": "com.dreamer.chatify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1089312348160-11c339kfu03rqe80ip3dcv1ij3pu5ur9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqEp00lvJnOo_H5wVeD46tpG4t7cdwkvE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1089312348160-11c339kfu03rqe80ip3dcv1ij3pu5ur9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
