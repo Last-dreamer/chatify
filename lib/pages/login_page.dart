@@ -1,4 +1,5 @@
 import 'package:chatify/providers/auth_provider.dart';
+import 'package:chatify/services/snackbar_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,8 +45,10 @@ class _LogInState extends State<LogIn> {
 
   Widget _loginPageUI() {
 
-    return Builder(builder: (context) {
-      _auth = Provider.of<AuthProvider>(context);
+
+    return Builder(builder: (BuildContext _context) {
+      SnackBarService.instance.buildContext = _context;
+      _auth = Provider.of<AuthProvider>(_context);
       print(_auth!.user);
       return Container(
         height: _deviceHeight * 0.60,
@@ -178,6 +181,7 @@ class _LogInState extends State<LogIn> {
       ),
     );
   }
+
 
   Widget _registerButton(){
     return GestureDetector(

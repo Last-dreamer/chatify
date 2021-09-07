@@ -1,5 +1,6 @@
 
 
+import 'package:chatify/services/snackbar_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -31,10 +32,10 @@ class AuthProvider extends ChangeNotifier {
      UserCredential _result = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
      user = _result;
      status = AuthStatus.Authenticated;
-     print('Login Successfully ...');
+     SnackBarService.instance.showSnackBarSuccess("Welcome, ${user!.user!.email}");
     }catch (e){
       status =  AuthStatus.Error;
-      print('Login Error.....');
+      SnackBarService.instance.showSnackBarError("Error while Authemticating...");
     }
     notifyListeners();
   }
