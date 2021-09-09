@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Chatify",
+      title: "My Chatify",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
