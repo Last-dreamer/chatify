@@ -1,5 +1,6 @@
 import 'package:chatify/pages/registeration_page.dart';
 import 'package:chatify/providers/auth_provider.dart';
+import 'package:chatify/services/navigation_services.dart';
 import 'package:chatify/services/snackbar_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -185,22 +186,17 @@ class _LogInState extends State<LogIn> {
   Widget _registerButton(){
     return GestureDetector(
       onTap: (){
-        print('Hey...!');
+       NavigationService.instance.navigateTo('register');
       },
       child: Container(
         height: _deviceHeight * 0.06,
         width: _deviceWidth,
         alignment: Alignment.center,
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterationPage(),));
-          },
-          child: Text('REGISTER', style: TextStyle(
-              color: Colors.white60,
-              fontSize: 18,
-              fontWeight: FontWeight.w700
-          ),),
-        ),
+        child: Text('REGISTER', style: TextStyle(
+            color: Colors.white60,
+            fontSize: 18,
+            fontWeight: FontWeight.w700
+        ),),
       ),
     );
   }
