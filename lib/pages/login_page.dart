@@ -83,9 +83,9 @@ class _LogInState extends State<LogIn> {
                 fontSize: 34, fontWeight: FontWeight.w700, color: Colors.white),
           ),
           Text(
-            'please login to your again',
+            'please login to your account',
             style: TextStyle(
-                fontSize: 24, fontWeight: FontWeight.w200,
+                fontSize: 20, fontWeight: FontWeight.w500,
                 ),
           ),
         ],

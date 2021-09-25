@@ -1,5 +1,6 @@
 
 
+import 'package:chatify/pages/home_page.dart';
 import 'package:chatify/pages/login_page.dart';
 import 'package:chatify/pages/registeration_page.dart';
 import 'package:chatify/services/navigation_services.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
       routes: {
         'login': (_) => LogIn(),
         'register': (_) => RegisterationPage(),
+        'home': (_) => HomePage(),
       },
     );
   }

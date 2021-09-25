@@ -1,11 +1,15 @@
 import 'dart:io';
 
 import 'package:chatify/pages/login_page.dart';
+import 'package:chatify/providers/auth_provider.dart';
+import 'package:chatify/services/CloudStorageService.dart';
+import 'package:chatify/services/DBService.dart';
 import 'package:chatify/services/media_services.dart';
 import 'package:chatify/services/navigation_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class RegisterationPage extends StatefulWidget {
   const RegisterationPage({Key? key}) : super(key: key);
@@ -18,6 +22,12 @@ class _RegisterationPageState extends State<RegisterationPage> {
   late double _deviceWidth;
   late double _deviceHeight;
   File? _image;
+
+  String? _name;
+  String? _email;
+  String? _password;
+
+  AuthProvider? _auth;
 
   late GlobalKey<FormState> _formState;
 
@@ -34,27 +44,31 @@ class _RegisterationPageState extends State<RegisterationPage> {
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         alignment: Alignment.center,
-        child: signupPageUI(),
+        child: ChangeNotifierProvider<AuthProvider>.value(
+            value: AuthProvider.instance, child: signupPageUI()),
       ),
     );
   }
 
   Widget signupPageUI() {
-    return Container(
-      width: _deviceWidth * 0.85,
-      height: _deviceHeight * 0.75,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _headerWidget(),
-          _inputForm(),
-          _loginButton(),
-          _registerButton()
-        ],
-      ),
-    );
+    return Builder(builder: (BuildContext _context) {
+      _auth = Provider.of<AuthProvider>(_context);
+      return Container(
+        width: _deviceWidth * 0.85,
+        height: _deviceHeight * 0.75,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _headerWidget(),
+            _inputForm(),
+            _registerButton(),
+            _loginButton(),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _headerWidget() {
@@ -129,12 +143,11 @@ class _RegisterationPageState extends State<RegisterationPage> {
           ),
           child: _image != null
               ? ClipOval(
-               child: Image.file(
-                 _image!,
-                 fit: BoxFit.cover,
-
-               ),
-          )
+                  child: Image.file(
+                    _image!,
+                    fit: BoxFit.cover,
+                  ),
+                )
               : Image.network(
                   "https://cdn0.iconfinder.com/data/icons/occupation-002/64/programmer-programming-occupation-avatar-512.png"),
         ),
@@ -146,7 +159,11 @@ class _RegisterationPageState extends State<RegisterationPage> {
     return TextFormField(
       autocorrect: false,
       style: TextStyle(color: Colors.white),
-      onSaved: (_input) {},
+      onChanged: (_input) {
+        setState(() {
+          _name = _input;
+        });
+      },
       validator: (value) {
         return value!.length != 0 ? null : 'please enter a Name';
       },
@@ -162,7 +179,11 @@ class _RegisterationPageState extends State<RegisterationPage> {
     return TextFormField(
       autocorrect: false,
       style: TextStyle(color: Colors.white),
-      onSaved: (_input) {},
+      onChanged: (_input) {
+        setState(() {
+          _email = _input;
+        });
+      },
       validator: (value) {
         return value!.length != 0 && value.contains("@")
             ? null
@@ -181,7 +202,11 @@ class _RegisterationPageState extends State<RegisterationPage> {
       autocorrect: false,
       obscureText: true,
       style: TextStyle(color: Colors.white),
-      onSaved: (_input) {},
+      onChanged: (_input) {
+        setState(() {
+          _password = _input;
+        });
+      },
       validator: (_input) {
         return _input!.length != 0 ? null : 'please enter a password!';
       },
@@ -193,23 +218,42 @@ class _RegisterationPageState extends State<RegisterationPage> {
     );
   }
 
-  Widget _loginButton() {
-    return Container(
-      height: _deviceHeight * 0.06,
-      width: _deviceWidth,
-      child: MaterialButton(
-        color: Colors.blue,
-        onPressed: () {},
-        child: Text(
-          'REGISTER',
-          style: TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
-        ),
-      ),
-    );
+  Widget _registerButton() {
+    return _auth!.status == AuthStatus.Authenticating
+        ? Align(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(),
+          )
+        : Container(
+            height: _deviceHeight * 0.06,
+            width: _deviceWidth,
+            child: MaterialButton(
+              color: Colors.blue,
+              onPressed: () {
+                if (_formState.currentState!.validate() && _image != null) {
+                  print(' something $_email $_name ');
+                  _auth!.registerWithEmailAndPassword(_email!, _password!,
+                      (_uid) async {
+                    var _result = await CloudStorageService.instance
+                        .uploadUserImage(_uid, _image!);
+                    var _imageURL = await _result!.ref.getDownloadURL();
+                    await DBService.instance
+                        .creatUserInDB(_uid, _name!, _email!, _imageURL);
+                  });
+                }
+              },
+              child: Text(
+                'REGISTER',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+          );
   }
 
-  Widget _registerButton() {
+  Widget _loginButton() {
     return GestureDetector(
       onTap: () {
         NavigationService.instance.goBack();
