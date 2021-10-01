@@ -98,7 +98,7 @@ class _RegisterationPageState extends State<RegisterationPage> {
 
   Widget _inputForm() {
     return Container(
-      height: _deviceHeight * 0.35,
+      height: _deviceHeight * 0.40,
       child: Form(
         key: _formState,
         onChanged: () {},
@@ -199,6 +199,7 @@ class _RegisterationPageState extends State<RegisterationPage> {
 
   Widget _passwordTextField() {
     return TextFormField(
+
       autocorrect: false,
       obscureText: true,
       style: TextStyle(color: Colors.white),

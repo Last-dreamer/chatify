@@ -46,7 +46,6 @@ class _LogInState extends State<LogIn> {
 
   Widget _loginPageUI() {
     return Builder(builder: (BuildContext _context) {
-
       SnackBarService.instance.buildContext = _context;
       _auth = Provider.of<AuthProvider>(_context);
       print(_auth!.user);
@@ -201,3 +200,6 @@ class _LogInState extends State<LogIn> {
     );
   }
 }
+
+
+

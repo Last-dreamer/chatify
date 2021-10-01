@@ -17,23 +17,39 @@ enum AuthStatus {
 
 class AuthProvider extends ChangeNotifier {
 
-  UserCredential? user;
+  User? user;
   AuthStatus? status;
   late FirebaseAuth _auth;
   static AuthProvider instance = AuthProvider();
 
   AuthProvider() {
     _auth = FirebaseAuth.instance;
+    _checkUserIsAuthenticated();
+  }
+
+  void _autoLogin(){
+    if(user != null){
+      NavigationService.instance.navigateToReplacement("home");
+    }
+  }
+
+  void _checkUserIsAuthenticated() async{
+    user =  await _auth.currentUser!;
+    if(user!=null){
+      notifyListeners();
+      _autoLogin();
+    }
+
   }
 
   void loginUserWithEmailAndPassword(String _email, String _password) async {
     status = AuthStatus.Authenticating;
     notifyListeners();
     try{
-     UserCredential _result = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-     user = _result;
+     final _result = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
+     user = _result.user;
      status = AuthStatus.Authenticated;
-     SnackBarService.instance.showSnackBarSuccess("Welcome, ${user!.user!.email}");
+     SnackBarService.instance.showSnackBarSuccess("Welcome, ${user!.displayName}");
      NavigationService.instance.navigateToReplacement('home');
     }catch (e){
       status =  AuthStatus.Error;
@@ -48,12 +64,12 @@ class AuthProvider extends ChangeNotifier {
     status = AuthStatus.Authenticating;
     notifyListeners();
     try{
-      UserCredential auth = await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
-      user = auth;
-      await onSuccess(user!.user!.uid);
-      SnackBarService.instance.showSnackBarSuccess(" ${user!.user!.email} is registered successfully");
+      final auth = await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
+      user = auth.user;
+      await onSuccess(user!.uid);
+      SnackBarService.instance.showSnackBarSuccess(" ${user!.email} is registered successfully");
       NavigationService.instance.goBack();
-      NavigationService.instance.navigateToReplacement('home');
+      NavigationService.instance.navigateTo("login");
       status = AuthStatus.Authenticated;
     }catch(e){
       status = AuthStatus.Error;
