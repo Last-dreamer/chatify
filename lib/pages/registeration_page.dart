@@ -229,6 +229,7 @@ class _RegisterationPageState extends State<RegisterationPage> {
             height: _deviceHeight * 0.06,
             width: _deviceWidth,
             child: MaterialButton(
+              shape: StadiumBorder(),
               color: Colors.blue,
               onPressed: () {
                 if (_formState.currentState!.validate() && _image != null) {

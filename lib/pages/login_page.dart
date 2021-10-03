@@ -84,7 +84,7 @@ class _LogInState extends State<LogIn> {
           Text(
             'please login to your account',
             style: TextStyle(
-                fontSize: 20, fontWeight: FontWeight.w500,
+                fontSize: 16, fontWeight: FontWeight.w500,
                 ),
           ),
         ],
@@ -166,6 +166,7 @@ class _LogInState extends State<LogIn> {
       height: _deviceHeight * 0.06,
       width: _deviceWidth,
       child: MaterialButton(
+         shape: StadiumBorder(),
         color: Colors.blue,
         onPressed: (){
           if(_formKey!.currentState!.validate()){

@@ -2,7 +2,10 @@
 
 import 'package:chatify/services/navigation_services.dart';
 import 'package:chatify/services/snackbar_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
@@ -22,8 +25,10 @@ class AuthProvider extends ChangeNotifier {
   late FirebaseAuth _auth;
   static AuthProvider instance = AuthProvider();
 
+
   AuthProvider() {
     _auth = FirebaseAuth.instance;
+
     _checkUserIsAuthenticated();
   }
 
@@ -79,4 +84,22 @@ class AuthProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+
+  void logOutUser() async {
+    try{
+      await _auth.signOut();
+      user = null;
+      status = AuthStatus.NotAuthenticated;
+      await NavigationService.instance.navigateToReplacement("login");
+      SnackBarService.instance.showSnackBarSuccess("Logged Out Success");
+
+    }catch(e) {
+      SnackBarService.instance.showSnackBarError("error while logout");
+    }
+    notifyListeners();
+  }
+
+
+
 }
