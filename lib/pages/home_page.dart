@@ -1,4 +1,5 @@
 import 'package:chatify/pages/profile_page.dart';
+import 'package:chatify/pages/recent_conversation_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -7,6 +8,7 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
+
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
@@ -56,7 +58,7 @@ class _HomePageState extends State<HomePage>
   Widget _tabBarPages(){
     return TabBarView(controller: tabController, children: [
       ProfilePage(_height!, _width!),
-      ProfilePage(_height!, _width!),
+      RecentConversationPage(_height!, _width!),
       ProfilePage(_height!, _width!)
 
     ],);
